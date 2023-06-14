@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sydney Gardner &amp; Jordan Wagge" />
 
-<meta name="date" content="2023-06-13" />
+<meta name="date" content="2023-06-14" />
 
 <title>Avila CREP Replication of Cameron et al. (2019)</title>
 
@@ -359,7 +359,7 @@ display: none;
 <h1 class="title toc-ignore">Avila CREP Replication of Cameron et
 al. (2019)</h1>
 <h4 class="author">Sydney Gardner &amp; Jordan Wagge</h4>
-<h4 class="date">2023-06-13</h4>
+<h4 class="date">2023-06-14</h4>
 
 </div>
 
@@ -375,14 +375,21 @@ al. (2019)</h1>
 </ul></li>
 <li><a href="#cameron-et-al.s-study" id="toc-cameron-et-al.s-study">Cameron et al.’s Study</a></li>
 <li><a href="#the-present-study" id="toc-the-present-study">The Present
-Study</a></li>
+Study</a>
+<ul>
+<li><a href="#extension-hypotheses" id="toc-extension-hypotheses">Extension Hypotheses</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#method" id="toc-method">Method</a>
 <ul>
 <li><a href="#participants" id="toc-participants">Participants</a></li>
 <li><a href="#procedures-and-materials" id="toc-procedures-and-materials">Procedures and Materials</a></li>
 </ul></li>
-<li><a href="#results" id="toc-results">Results</a></li>
+<li><a href="#results" id="toc-results">Results</a>
+<ul>
+<li><a href="#nasa-scores" id="toc-nasa-scores">NASA Scores</a></li>
+<li><a href="#extension-hypotheses-1" id="toc-extension-hypotheses-1">Extension Hypotheses</a></li>
+</ul></li>
 <li><a href="#discussion" id="toc-discussion">Discussion</a>
 <ul>
 <li><a href="#limitations" id="toc-limitations">Limitations</a></li>
@@ -393,45 +400,6 @@ Research</a></li>
 </ul>
 </div>
 
-<pre class="r"><code>url &lt;- &quot;https://raw.githubusercontent.com/jorowags/avila_crep_cameron/main/avila_cameron_data.csv&quot;
-initial_data &lt;- read.csv(url)
-data &lt;- initial_data</code></pre>
-<pre class="r"><code># rename variables
-names(data)[names(data) == &quot;Q004_03&quot;] &lt;- &quot;age&quot;
-## XXX rename other variables
-
-# remove participants who did not finish study
-data &lt;- subset(data, data$LASTPAGE &gt; 85)
-
-# remove minors
-data &lt;- subset(data, data$age &gt; 17)
-
-# remove cases with &quot;test&quot; in gender
-data &lt;- subset(data, !grepl(&quot;Test&quot;, age, ignore.case = TRUE))
-
-# Initialize new variables
-for (i in 1:40) {
-  new_var &lt;- paste0(&quot;T&quot;, sprintf(&quot;%03d&quot;, i))
-  data[[new_var]] &lt;- NA
-}
-
-# Populate the new variables with the choices
-for (row in 1:nrow(data)) {
-  for (i in 1:40) {
-    # Get the trial column name and stimulus number
-    trial_col &lt;- paste0(&quot;R001x&quot;, sprintf(&quot;%02d&quot;, i))
-    stimulus_num &lt;- data[row, trial_col]
-    
-    # Get the choice column name
-    choice_col &lt;- paste0(&quot;C&quot;, sprintf(&quot;%03d&quot;, stimulus_num))
-    
-    # Get the new variable name
-    new_var &lt;- paste0(&quot;T&quot;, sprintf(&quot;%03d&quot;, i))
-    
-    # Populate the new variable with the choice
-    data[row, new_var] &lt;- data[row, choice_col]
-  }
-}</code></pre>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Replicating a study gets a bad rap in science as many see this
@@ -610,51 +578,14 @@ situation as less cognitively costly.</p>
 that the present study will replicate their previous findings. We expect
 that participants will demonstrate a preference for the empathy deck
 when completing the trials of the Empathy Selection Task.</p>
+<div id="extension-hypotheses" class="section level3">
+<h3>Extension Hypotheses</h3>
+<p>SYDNEY PLEASE HALP</p>
+</div>
 </div>
 </div>
 <div id="method" class="section level1">
 <h1>Method</h1>
-<pre class="r"><code># N
-## Calculate number of cases in initial data
-n_initial &lt;- length(unique(initial_data$CASE[initial_data$CASE != &quot;NANA&quot;]))
-n_final &lt;- length(unique(data$CASE[data$CASE != &quot;NANA&quot;]))
-n_exclusions &lt;- as.numeric(n_initial) - as.numeric(n_final)
-
-## Calculate number of cases in final data
-
-# Age M and SD
-## Clean up age variable
-data$age &lt;- gsub(&quot;\\D&quot;, &quot;&quot;, data$age)
-age_m &lt;- sprintf(&quot;%.2f&quot;, mean(as.numeric(data$age)), 2)</code></pre>
-<pre><code>## Warning in sprintf(&quot;%.2f&quot;, mean(as.numeric(data$age)), 2): one argument not used
-## by format &#39;%.2f&#39;</code></pre>
-<pre class="r"><code>age_sd &lt;- sprintf(&quot;%.2f&quot;, sd(as.numeric(data$age)), 2)</code></pre>
-<pre><code>## Warning in sprintf(&quot;%.2f&quot;, sd(as.numeric(data$age)), 2): one argument not used
-## by format &#39;%.2f&#39;</code></pre>
-<pre class="r"><code># gender
-## Clean up variable
-names(data)[names(data) == &quot;Q004_01&quot;] &lt;- &quot;gender&quot;
-data$gender &lt;- gsub(&quot;alpha male&quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;I am a damn male&quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;MALE&quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;Male&quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;Straight male&quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;male &quot;,&quot;male&quot;, data$gender)
-data$gender &lt;- gsub(&quot;Female&quot;,&quot;female&quot;, data$gender)
-
-female_percentage &lt;- sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;female&quot;] * 100, 2)</code></pre>
-<pre><code>## Warning in sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;female&quot;] * 100, : one
-## argument not used by format &#39;%.2f&#39;</code></pre>
-<pre class="r"><code>male_percentage &lt;- sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;male&quot;] * 100, 2)</code></pre>
-<pre><code>## Warning in sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;male&quot;] * 100, : one
-## argument not used by format &#39;%.2f&#39;</code></pre>
-<pre class="r"><code>nb_percentage &lt;- sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;non-binary&quot;] * 100, 2)</code></pre>
-<pre><code>## Warning in sprintf(&quot;%.2f&quot;, prop.table(table(data$gender))[&quot;non-binary&quot;] * : one
-## argument not used by format &#39;%.2f&#39;</code></pre>
-<pre class="r"><code># &quot;I am a damn male&quot;,&quot;male&quot;, &quot;Male&quot;, &quot;MALE&quot;, &quot;Straight male&quot;
-
-
-# Race/ethnicity</code></pre>
 <div id="participants" class="section level2">
 <h2>Participants</h2>
 <p>For this replication, participants were recruited from an
@@ -673,9 +604,10 @@ participants ranging between ages 18 and 75. The majority of
 participants (78.85%) identified as female, in addition to 19.23%
 identifying as male, and 1.92% identifying as non-binary. Demographics
 were also collected for participants’ race/ethnicity, finding that the
-majority of participants (77%) were Caucasian/white. Additionally, 10%
-of participants were Black, 6% were Hispanic/Latino, 2% were Indian, and
-4% were mixed (responded with multiple racial/ethnic identities).</p>
+majority of participants (75.00%) identified as white. Additionally,
+9.62% of participants were Black, 5.77% were Hispanic/Latino, 1.92% were
+Indian, 1.92% were Indigenous, and 3.85% were multiracial (responded
+with multiple racial/ethnic identities).</p>
 </div>
 <div id="procedures-and-materials" class="section level2">
 <h2>Procedures and Materials</h2>
@@ -687,21 +619,21 @@ trials, seeing two decks of cards: the “DESCRIBE” desk on the left, and
 the “FEEL” deck on the right. Participants were asked to choose between
 these decks. Once a deck has been chosen, an image of a person is
 revealed. Depending on the deck chosen by the participant. they were
-given one of two possible sets of instructions. When a participant
-selects from the “DESCRIBE” deck, the participant was told to look at
-the image objectively, focusing on the external features and appearances
-of the person in the image. For these trials, participants were asked to
-type one sentence describing the age and gender of the person in the
-image. When a participant selects from the “FEEL” deck, the participant
-was told to look at the image empathetically, focusing on the internal
-feelings and experiences of the person in the image. For these trials,
-participants were asked to type one sentence describing the feelings and
-experiences of the person in the image. Participants were able to
-independently choose from either deck on any trial, and were free to
-choose from each deck at any time. Participants were not required to
-choose any deck for a specific amount of trials, and could in fact
-choose to favor a deck, completing more trials on it than the other
-deck.</p>
+given one of two possible sets of instructions.</p>
+<p>When a participant selects from the “DESCRIBE” deck, the participant
+was told to look at the image objectively, focusing on the external
+features and appearances of the person in the image. For these trials,
+participants were asked to type one sentence describing the age and
+gender of the person in the image. When a participant selects from the
+“FEEL” deck, the participant was told to look at the image
+empathetically, focusing on the internal feelings and experiences of the
+person in the image. For these trials, participants were asked to type
+one sentence describing the feelings and experiences of the person in
+the image. Participants were able to independently choose from either
+deck on any trial, and were free to choose from each deck at any time.
+Participants were not required to choose any deck for a specific amount
+of trials, and could in fact choose to favor a deck, completing more
+trials on it than the other deck.</p>
 <p>After completing the series of trials, participants were tasked to
 complete a series of questions with open-ended responses, assessing
 their experience with the Empathy Selection Task. The questions asked
@@ -741,22 +673,6 @@ deck; failing to describe how the child felt for the “FEEL” deck). After
 reviewing all the data, 4.32% of participant responses for the
 “DESCRIBE” or “FEEL” trials were flagged by the coders, but remained
 included in the data analyzed.</p>
-<pre class="r"><code>#take mean of deck choices – numbers closer to 2 indicate more “Feel”, closer to 1 indicate more “Describe”, subtract 1 to get numbers similar to theirs
-
-#calculate NASA
-
-# calculate MFI
-
-#Tests:
-#1. One-sample t-test against .5 for deck selection (see #first row of above photo)
-#2. One-sample t-test: EffortDiff (empathy minus objective) #deck selection -&gt; NASA effort, test against 0
-#3. Same as #2, but for Aversive
-#4. Same as #3, but for Efficacy
-#5. Correlation: deck selection and effodiff
-#6. Correlation: deck selection and affdiff
-#7. Correlation: deck selection and NASA effidiff
-
-# Time course analysis -- see https://osf.io/w8czf</code></pre>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -767,24 +683,49 @@ following statistical analyses. We conducted a one-sample t-test against
 a value of .5, in order to determine whether participants tended to
 prefer one deck over the other (empathy = 1, neutral/describe = 0). In
 the original study, they found significant differences in the mean
-empathy choice when compared to .5, t(55) = -4.70, p &lt; .001. These
-results indicated that more participants favored the neutral deck (M =
-.33, SD = .27). In the present study, we were unable to replicate this
-effect, with our findings showing no significant differences, t(47) =
--0.14, p = .893. Our analysis indicated that participants did not
-exhibit a preference for one deck over the other (M = .50, SD =
-.21).</p>
+empathy choice when compared to .5, <em>t</em>(55) = -4.70, <em>p</em>
+&lt; .001. These results indicated that more participants favored the
+neutral deck (<em>M</em> = .33, <em>SD</em> = .27). In the present
+study, we were unable to replicate this effect, with our findings
+showing no significant differences, <em>t</em>(51) = -0.17, <em>p</em> =
+0.864. Our analysis indicated that participants did not exhibit a
+preference for one deck over the other (<em>M</em> = 0.49, <em>SD</em> =
+0.22).</p>
 <p>In the original study, after conducting a meta-analysis over 11
-different students they found that the empathy deck, when compared to
-the objective, was characterized as more effortful, less efficacious,
-and more aversive. These differences across all studies examined were
-statistically significant (p &lt; .001). In the present study, we
-conducted similar one-sample t-tests using our data collected. We found
-that participants also perceived the empathy deck to require more effort
-(t(47) = 3.82, p &lt; .001, d = 0.55) and to be more aversive (t(47) =
-3.07, p = .004, d = 0.44) than the neutral deck. Conversely,
-participants found the neutral deck to be more efficacious (t(47) =
--2.17, p = .035, d = -0.31).</p>
+different studies they found that the empathy deck, when compared to the
+objective, was characterized as more effortful, less efficacious, and
+more aversive. These differences across all studies examined were
+statistically significant (p &lt; .001).</p>
+<p>In the present study, we conducted similar one-sample t-tests using
+our data collected.</p>
+<div id="nasa-scores" class="section level3">
+<h3>NASA Scores</h3>
+<div id="effort" class="section level4">
+<h4>Effort</h4>
+<p>To calculate the effort score, we subtracted effort scores for the
+blue deck (“feel”) from effort scores for the red deck (“describe”).
+Numbers above 0 indicate greater effort for the red (describe/objective)
+deck, while numbers below 0 indicate greater effort for the blue
+(empathy) deck. Scores for effort were significantly below 0 (<em>M</em>
+= -0.7, <em>SD</em> = 1.35), indicating that participants perceived the
+empathy deck to require more effort (<em>t</em>(51) = -3.76, <em>p</em>
+= 0, <em>d</em> = -0.52).</p>
+</div>
+<div id="aversiveness" class="section level4">
+<h4>Aversiveness</h4>
+<p>We computed aversiveness scores in the same manner (subtracting blue
+scores from red scores, so that numbers lower than 0 indicate more
+aversiveness for the blue empathy deck). Participants did rate the blue
+deck as more aversive than the red deck (<em>M</em> = -0.63, <em>SD</em>
+= 1.46), <em>t</em>(51) = -3.14, <em>p</em> = 0.003, <em>d</em> =
+-0.44.</p>
+</div>
+<div id="efficacy" class="section level4">
+<h4>Efficacy</h4>
+<p>Similarly, we computed efficacy scores and found that participants
+felt the blue (objective) deck was more efficacious than the red
+(empathy) deck (<em>M</em> = 0.4, <em>SD</em> = 1.36), <em>t</em>(51) =
+2.14, <em>p</em> = 0.037, <em>d</em> = 0.3.</p>
 <p>Additionally, the original study also conducted a meta-analysis and
 found negative correlations between the selection of the empathy deck
 and ratings of effort and aversiveness associated with that deck. Again,
@@ -797,6 +738,11 @@ However, a statistically significant correlation was found between deck
 choice and efficacy (r = .63, p &lt; .001). These findings indicated
 that participants were more likely to choose the empathy deck when they
 perceived there to be greater efficacy.</p>
+</div>
+</div>
+<div id="extension-hypotheses-1" class="section level2">
+<h2>Extension Hypotheses</h2>
+</div>
 </div>
 <div id="discussion" class="section level1">
 <h1>Discussion</h1>
