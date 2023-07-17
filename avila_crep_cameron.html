@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sydney Gardner &amp; Jordan Wagge" />
 
-<meta name="date" content="2023-06-14" />
+<meta name="date" content="2023-06-16" />
 
 <title>Avila CREP Replication of Cameron et al. (2019)</title>
 
@@ -359,7 +359,7 @@ display: none;
 <h1 class="title toc-ignore">Avila CREP Replication of Cameron et
 al. (2019)</h1>
 <h4 class="author">Sydney Gardner &amp; Jordan Wagge</h4>
-<h4 class="date">2023-06-14</h4>
+<h4 class="date">2023-06-16</h4>
 
 </div>
 
@@ -695,7 +695,7 @@ preference for one deck over the other (<em>M</em> = 0.49, <em>SD</em> =
 different studies they found that the empathy deck, when compared to the
 objective, was characterized as more effortful, less efficacious, and
 more aversive. These differences across all studies examined were
-statistically significant (p &lt; .001).</p>
+statistically significant (<em>p</em> &lt; .001).</p>
 <p>In the present study, we conducted similar one-sample t-tests using
 our data collected.</p>
 <div id="nasa-scores" class="section level3">
@@ -709,7 +709,7 @@ deck, while numbers below 0 indicate greater effort for the blue
 (empathy) deck. Scores for effort were significantly below 0 (<em>M</em>
 = -0.7, <em>SD</em> = 1.35), indicating that participants perceived the
 empathy deck to require more effort (<em>t</em>(51) = -3.76, <em>p</em>
-= 0, <em>d</em> = -0.52).</p>
+&lt; .001, <em>d</em> = -0.52).</p>
 </div>
 <div id="aversiveness" class="section level4">
 <h4>Aversiveness</h4>
@@ -726,22 +726,191 @@ deck as more aversive than the red deck (<em>M</em> = -0.63, <em>SD</em>
 felt the blue (objective) deck was more efficacious than the red
 (empathy) deck (<em>M</em> = 0.4, <em>SD</em> = 1.36), <em>t</em>(51) =
 2.14, <em>p</em> = 0.037, <em>d</em> = 0.3.</p>
+</div>
+<div id="deck-selection-and-nasa-subscales" class="section level4">
+<h4>Deck selection and NASA subscales</h4>
 <p>Additionally, the original study also conducted a meta-analysis and
 found negative correlations between the selection of the empathy deck
 and ratings of effort and aversiveness associated with that deck. Again,
-the differences were all statistically significant (p &lt; .001). In the
-present study, we conducted a Pearson’s r correlation analysis to
-investigate if similar associations exist in our dataset. We found no
-significant correlation between deck choice (empathy selection) and
-effort (r = -.11, p = .458) or aversiveness (r = .02, p = .882).
-However, a statistically significant correlation was found between deck
-choice and efficacy (r = .63, p &lt; .001). These findings indicated
-that participants were more likely to choose the empathy deck when they
+the differences were all statistically significant (<em>p</em> &lt;
+.001). In the present study, we conducted a Pearson’s r correlation
+analysis to investigate if similar associations exist in our dataset. We
+found no significant correlation between deck choice (empathy selection)
+and effort (<em>r</em> = 0.15, <em>p</em> = 0.295) or aversiveness
+(<em>r</em> = -0.02, <em>p</em> = 0.898). However, a statistically
+significant correlation was found between deck choice and efficacy
+(<em>r</em> = -0.6, <em>p</em> &lt; .001). These findings indicated that
+participants were more likely to choose the empathy deck when they
 perceived there to be greater efficacy.</p>
+<pre><code>## # A tibble: 6 × 314
+##    CASE SERIAL QUESTNNR MODE   STARTED  C001  C002  C003  C004  C005  C006  C007
+##   &lt;int&gt; &lt;lgl&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## 2    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## 3    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## 4    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## 5    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## 6    92 NA     avila    inter… 4/12/2…     1     1     1     2     1     1     2
+## # … with 302 more variables: C008 &lt;int&gt;, C009 &lt;int&gt;, C010 &lt;int&gt;, C011 &lt;int&gt;,
+## #   C012 &lt;int&gt;, C013 &lt;int&gt;, C014 &lt;int&gt;, C015 &lt;int&gt;, C016 &lt;int&gt;, C017 &lt;int&gt;,
+## #   C018 &lt;int&gt;, C019 &lt;int&gt;, C020 &lt;int&gt;, C021 &lt;int&gt;, C022 &lt;int&gt;, C023 &lt;int&gt;,
+## #   C024 &lt;int&gt;, C025 &lt;int&gt;, C026 &lt;int&gt;, C027 &lt;int&gt;, C028 &lt;int&gt;, C029 &lt;int&gt;,
+## #   C030 &lt;int&gt;, C031 &lt;int&gt;, C032 &lt;int&gt;, C033 &lt;int&gt;, C034 &lt;int&gt;, C035 &lt;int&gt;,
+## #   C036 &lt;int&gt;, C037 &lt;int&gt;, C038 &lt;int&gt;, C039 &lt;int&gt;, C040 &lt;int&gt;, D001_01 &lt;chr&gt;,
+## #   D002_01 &lt;chr&gt;, D003_01 &lt;chr&gt;, D004_01 &lt;chr&gt;, D005_01 &lt;chr&gt;, …</code></pre>
+<pre><code>## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: Value_centered ~ Trial_centered + (Trial_centered | CASE)
+##    Data: tall_data
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   2551.4   2579.6  -1270.7   2541.4     2075 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.5222 -0.9249 -0.1201  0.9103  3.0315 
+## 
+## Random effects:
+##  Groups Name           Variance Std.Dev. Corr
+##  CASE   (Intercept)    0.153342 0.39159      
+##         Trial_centered 0.002611 0.05109  1.00
+## Number of obs: 2080, groups:  CASE, 52
+## 
+## Fixed effects:
+##                 Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)     0.203835   0.106619   1.912   0.0559 .
+## Trial_centered -0.010015   0.008447  -1.186   0.2358  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr)
+## Trial_cntrd 0.057 
+## optimizer (Nelder_Mead) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: 
+## Value_centered ~ Trial_centered * effortdiff_centered + (Trial_centered |  
+##     CASE)
+##    Data: tall_data
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   2553.8   2593.3  -1269.9   2539.8     2073 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.5364 -0.9195 -0.1218  0.9099  2.9899 
+## 
+## Random effects:
+##  Groups Name           Variance Std.Dev. Corr
+##  CASE   (Intercept)    0.160461 0.40058      
+##         Trial_centered 0.002447 0.04947  1.00
+## Number of obs: 2080, groups:  CASE, 52
+## 
+## Fixed effects:
+##                                     Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                         0.205745   0.107306   1.917   0.0552 .
+## Trial_centered                     -0.010263   0.008253  -1.244   0.2136  
+## effortdiff_centered                -0.015767   0.081797  -0.193   0.8471  
+## Trial_centered:effortdiff_centered  0.007953   0.006310   1.260   0.2076  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Trl_cn effrt_
+## Trial_cntrd  0.054              
+## effrtdff_cn -0.011  0.009       
+## Trl_cntrd:_  0.007 -0.015  0.028
+## optimizer (Nelder_Mead) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: 
+## Value_centered ~ Trial_centered * efficacy_centered + (Trial_centered |  
+##     CASE)
+##    Data: tall_data
+## Control: glmerControl(optimizer = &quot;bobyqa&quot;, optCtrl = list(maxfun = 1e+05))
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   2529.5   2569.0  -1257.7   2515.5     2073 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.2549 -0.8991 -0.1285  0.8973  3.0235 
+## 
+## Random effects:
+##  Groups Name           Variance Std.Dev. Corr
+##  CASE   (Intercept)    0.053537 0.2314       
+##         Trial_centered 0.001892 0.0435   1.00
+## Number of obs: 2080, groups:  CASE, 52
+## 
+## Fixed effects:
+##                                   Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)                       0.211201   0.097734   2.161  0.03070 * 
+## Trial_centered                   -0.009722   0.007623  -1.275  0.20220   
+## efficacy_centered                -0.275580   0.084064  -3.278  0.00104 **
+## Trial_centered:efficacy_centered -0.020287   0.006830  -2.971  0.00297 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Trl_cn effcc_
+## Trial_cntrd -0.196              
+## effccy_cntr -0.086  0.036       
+## Trl_cntrd:_  0.045 -0.087 -0.317
+## optimizer (bobyqa) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: 
+## Value_centered ~ Trial_centered * aversion_centered + (Trial_centered |  
+##     CASE)
+##    Data: tall_data
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   2555.0   2594.5  -1270.5   2541.0     2073 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.5095 -0.9259 -0.1201  0.9098  3.0281 
+## 
+## Random effects:
+##  Groups Name           Variance Std.Dev. Corr
+##  CASE   (Intercept)    0.153859 0.39225      
+##         Trial_centered 0.002618 0.05116  1.00
+## Number of obs: 2080, groups:  CASE, 52
+## 
+## Fixed effects:
+##                                   Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                       0.204352   0.106814   1.913   0.0557 .
+## Trial_centered                   -0.009896   0.008473  -1.168   0.2428  
+## aversion_centered                -0.033181   0.076551  -0.433   0.6647  
+## Trial_centered:aversion_centered -0.002859   0.006113  -0.468   0.6399  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Trl_cn avrsn_
+## Trial_cntrd  0.056              
+## avrsn_cntrd -0.044  0.026       
+## Trl_cntrd:_  0.029 -0.055  0.014
+## optimizer (Nelder_Mead) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)</code></pre>
 </div>
 </div>
 <div id="extension-hypotheses-1" class="section level2">
 <h2>Extension Hypotheses</h2>
+<p>None of the fatigue subscales were significantly correlated with any
+of the indices.</p>
 </div>
 </div>
 <div id="discussion" class="section level1">

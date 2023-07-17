@@ -1,25 +1,35 @@
 ---
-title: Avila CREP Replication of Cameron et al. (2019) #23-32
+title: "Avila CREP Replication of Cameron et al. (2019)"
 author: "Sydney Gardner & Jordan Wagge"
-date: "`r Sys.Date()`"
-output: 
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
   html_document:
-    toc: true
+    toc: yes
     toc_depth: 3
+  word_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# To do list
-# Install/load packages
-# Import data
-# Data processing
-# Data analysis
+# Define a function to format the p-values
+format_p <- function(p_value) {
+  if (p_value < .001) {
+    return("*p* < .001")
+  } else {
+    return(paste0("*p* = ", round(p_value, 3)))
+  }
+}
+
 ```
 
 ```{r packages, include=FALSE, echo = FALSE}
-packages = c("psych","dplyr")
+packages = c("psych","dplyr","tidyverse", "lme4")
 
 ## Now load or install&load all
 package.check <- lapply(
@@ -185,7 +195,7 @@ For this replication, participants were recruited from an undergraduate research
 In order to participate in this study, participants had to be at least 18 years of age (*M* = `r age_m`, *SD* = `r age_sd`), with participants ranging between ages `r min(data$age)` and `r max(data$age)`. The majority of participants (`r female_percentage`%) identified as female, in addition to `r male_percentage`% identifying as male, and `r nb_percentage`% identifying as non-binary. Demographics were also collected for participants’ race/ethnicity, finding that the majority of participants (`r white_percentage`%) identified as white. Additionally, `r black_percentage`% of participants were Black, `r hispanic_percentage`% were Hispanic/Latino, `r indian_percentage`% were Indian, `r indigenous_percentage`% were Indigenous, and `r multiracial_percentage`% were multiracial (responded with multiple racial/ethnic identities). 
 
 ## Procedures and Materials 
-Participants completed this online study on SoSci Survey. Participants were told beforehand that they should be able to complete the survey within 30 minutes. After completing the informed consent form, participants were instructed that they would complete a series of trials, seeing two decks of cards: the “DESCRIBE” desk on the left, and the “FEEL” deck on the right. Participants were asked to choose between these decks. Once a deck has been chosen, an image of a person is revealed. Depending on the deck chosen by the participant. they were given one of two possible sets of instructions. 
+Participants completed this online study on SoSci Survey. Participants were told beforehand that they should be able to complete the survey within 30 minutes. After completing the informed consent form, participants were instructed that they would complete a series of trials, seeing two decks of cards: the red “DESCRIBE” desk on the left, and the blue “FEEL” deck on the right. Participants were asked to choose between these decks. Once a deck has been chosen, an image of a person is revealed. Depending on the deck chosen by the participant. they were given one of two possible sets of instructions. 
 
 When a participant selects from the “DESCRIBE” deck, the participant was told to look at the image objectively, focusing on the external features and appearances of the person in the image. For these trials, participants were asked to type one sentence describing the age and gender of the person in the image. When a participant selects from the “FEEL” deck, the participant was told to look at the image empathetically, focusing on the internal feelings and experiences of the person in the image. For these trials, participants were asked to type one sentence describing the feelings and experiences of the person in the image. Participants were able to independently choose from either deck on any trial, and were free to choose from each deck at any time. Participants were not required to choose any deck for a specific amount of trials, and could in fact choose to favor a deck, completing more trials on it than the other deck. 
 
@@ -200,11 +210,11 @@ Results collected on SoSci were downloaded, evaluated, then analyzed once the de
 # Calculate and store the choice_index
 data$choice_index <- rowMeans(data[, paste0("C", sprintf("%03d", 1:40))]) - 1
 
-# Calculate the overall mean of choice_index
+# Calculate the overall mean of choice_index for all participants
 mean_choice_index <- mean(data$choice_index, na.rm = TRUE)
 
 #calculate NASA
-## RedNASA
+## RedNASA - describe (objective) deck
 ### Rename variables
 names(data)[names(data) == "Q002_01"] <- "RedNASA_demanding"
 names(data)[names(data) == "Q002_02"] <- "RedNASA_hard_work"
@@ -220,7 +230,7 @@ data$RedNASA_efficacy[data$RedNASA_efficacy == "-9"] <- NA
 ### Add variables for "subscales"
 data$RedNASA_effort <- (data$RedNASA_demanding+data$RedNASA_hard_work)/2
 
-## BlueNASA
+## BlueNASA - feel (empathy) deck
 ### Rename variables
 names(data)[names(data) == "Q003_01"] <- "BlueNASA_demanding"
 names(data)[names(data) == "Q003_02"] <- "BlueNASA_hard_work"
@@ -277,14 +287,14 @@ one_ci_high <- round(deck_t_result$conf.int[2], 2)
 
 ```
 
-Upon completion of reviewing all participant responses, in order to assess participant preference between the two decks, we employed the following statistical analyses. We conducted a one-sample t-test against a value of .5, in order to determine whether participants tended to prefer one deck over the other (empathy = 1, neutral/describe = 0). In the original study, they found significant differences in the mean empathy choice when compared to .5, *t*(55) = -4.70, *p* < .001. These results indicated that more participants favored the neutral deck (*M* = .33, *SD* = .27). In the present study, we were unable to replicate this effect, with our findings showing no significant differences, *t*(`r one_df`) = `r one_t_value`, *p* = `r one_p_value`. Our analysis indicated that participants did not exhibit a preference for one deck over the other (*M* = `r one_mean`, *SD* = `r round(sd(data$choice_index), 2)`). 
+Upon completion of reviewing all participant responses, in order to assess participant preference between the two decks, we employed the following statistical analyses. We conducted a one-sample t-test against a value of .5, in order to determine whether participants tended to prefer one deck over the other (empathy = 1, neutral/describe = 0). In the original study, they found significant differences in the mean empathy choice when compared to .5, *t*(55) = -4.70, *p* < .001. These results indicated that more participants favored the neutral deck (*M* = .33, *SD* = .27). In the present study, we were unable to replicate this effect, with our findings showing no significant differences, *t*(`r one_df`) = `r one_t_value`, `r format_p(one_p_value)`. Our analysis indicated that participants did not exhibit a preference for one deck over the other (*M* = `r one_mean`, *SD* = `r round(sd(data$choice_index), 2)`). 
 
-In the original study, after conducting a meta-analysis over 11 different studies they found that the empathy deck, when compared to the objective, was characterized as more effortful, less efficacious, and more aversive. These differences across all studies examined were statistically significant (p < .001).
+In the original study, after conducting a meta-analysis over 11 different studies they found that the empathy deck, when compared to the objective, was characterized as more effortful, less efficacious, and more aversive. These differences across all studies examined were statistically significant (*p* < .001).
 
 ```{r effort_tests, include = FALSE, echo = FALSE}
 #	One-sample t-test: EffortDiff (empathy minus objective) deck selection -> NASA effort, test against 0
 
-## Create effortdiff score by calculating empathy - objective. Values below 0 indicate that empathy was more effortful.
+## Create effortdiff score by calculating objective NASA - empathy NASA. Values below 0 indicate that empathy was more effortful.
 data$effortdiff <- data$RedNASA_effort - data$BlueNASA_effort
 
 # Conduct one-sample t-test
@@ -309,7 +319,7 @@ In the present study, we conducted similar one-sample t-tests using our data col
 ### NASA Scores
 
 #### Effort
-To calculate the effort score, we subtracted effort scores for the blue deck ("feel") from effort scores for the red deck ("describe"). Numbers above 0 indicate greater effort for the red (describe/objective) deck, while numbers below 0 indicate greater effort for the blue (empathy) deck. Scores for effort were significantly below 0 (*M* = `r effortdiff_mean`, *SD* = `r round(sd(data$effortdiff),2)`), indicating that participants perceived the empathy deck to require more effort (*t*(`r effortdiff_df`) = `r effortdiff_t_value`, *p* = `r effortdiff_p_value`, *d* = `r effortdiff_cohens_d`).
+To calculate the effort score, we subtracted effort scores for the blue deck ("feel") from effort scores for the red deck ("describe"). Numbers above 0 indicate greater effort for the red (describe/objective) deck, while numbers below 0 indicate greater effort for the blue (empathy) deck. Scores for effort were significantly below 0 (*M* = `r effortdiff_mean`, *SD* = `r round(sd(data$effortdiff),2)`), indicating that participants perceived the empathy deck to require more effort (*t*(`r effortdiff_df`) = `r effortdiff_t_value`, `r format_p(effortdiff_p_value)`, *d* = `r effortdiff_cohens_d`).
 
 ```{r aversiveness_tests, include = FALSE, echo = FALSE}
 #	One-sample t-test: aversiveness (empathy minus objective) -> NASA aversion, test against 0
@@ -335,7 +345,7 @@ aversion_cohens_d <- round(mean(data$aversion) / sd(data$aversion), 2)
 ```
 
 #### Aversiveness
-We computed aversiveness scores in the same manner (subtracting blue scores from red scores, so that numbers lower than 0 indicate more aversiveness for the blue empathy deck). Participants did rate the blue deck as more aversive than the red deck (*M* = `r aversion_mean`, *SD* = `r round(sd(data$aversion), 2)`), *t*(`r aversion_df`) = `r aversion_t_value`, *p* = `r aversion_p_value`, *d* = `r aversion_cohens_d`. 
+We computed aversiveness scores in the same manner (subtracting blue scores from red scores, so that numbers lower than 0 indicate more aversiveness for the blue empathy deck). Participants did rate the blue deck as more aversive than the red deck (*M* = `r aversion_mean`, *SD* = `r round(sd(data$aversion), 2)`), *t*(`r aversion_df`) = `r aversion_t_value`, `r format_p(aversion_p_value)`, *d* = `r aversion_cohens_d`. 
 
 ```{r efficacy_tests, include = FALSE, echo = FALSE}
 #	One-sample t-test: efficacy (empathy minus objective) -> NASA efficacy, test against 0
@@ -361,9 +371,165 @@ efficacy_cohens_d <- round(mean(data$efficacy) / sd(data$efficacy), 2)
 ```
 
 #### Efficacy
-Similarly, we computed efficacy scores and found that participants felt the blue (objective) deck was more efficacious than the red (empathy) deck (*M* = `r efficacy_mean`, *SD* = `r round(sd(data$efficacy),2)`), *t*(`r efficacy_df`) = `r efficacy_t_value`, *p* = `r efficacy_p_value`, *d* = `r efficacy_cohens_d`.
+Similarly, we computed efficacy scores and found that participants felt the red (objective) deck was more efficacious than the blue (empathy) deck (*M* = `r efficacy_mean`, *SD* = `r round(sd(data$efficacy),2)`), *t*(`r efficacy_df`) = `r efficacy_t_value`, `r format_p(efficacy_p_value)`, *d* = `r efficacy_cohens_d`.
 
-Additionally, the original study also conducted a meta-analysis and found negative correlations between the selection of the empathy deck and ratings of effort and aversiveness associated with that deck. Again, the differences were all statistically significant (p < .001). In the present study, we conducted a Pearson’s r correlation analysis to investigate if similar associations exist in our dataset. We found no significant correlation between deck choice (empathy selection) and effort (r = -.11, p = .458) or aversiveness (r = .02, p = .882). However, a statistically significant correlation was found between deck choice and efficacy (r = .63, p < .001). These findings indicated that participants were more likely to choose the empathy deck when they perceived there to be greater efficacy. 
+#### Deck selection and NASA subscales
+
+```{r decks_subscales, include = FALSE, echo = FALSE}
+
+choice_effort <- corr.test(data$choice_index, data$effortdiff)
+print(choice_effort, short = FALSE)
+
+choice_effort_r_value <- round(choice_effort$r, 2)
+choice_effort_df <- choice_effort$n - 2
+choice_effort_p_value <- round(choice_effort$p, 3)
+choice_effort_ci_lower <- round(choice_effort$ci$lower, 2)
+choice_effort_ci_upper <- round(choice_effort$ci$upper, 2)
+
+choice_aversion <- corr.test(data$choice_index, data$aversion)
+print(choice_aversion, short = FALSE)
+
+choice_aversion_r_value <- round(choice_aversion$r, 2)
+choice_aversion_df <- choice_aversion$n - 2
+choice_aversion_p_value <- round(choice_aversion$p, 3)
+choice_aversion_ci_lower <- round(choice_aversion$ci$lower, 2)
+choice_aversion_ci_upper <- round(choice_aversion$ci$upper, 2)
+
+choice_efficacy <- corr.test(data$choice_index, data$efficacy)
+print(choice_efficacy, short = FALSE)
+
+#scatterplot
+library(ggplot2)
+# Basic scatter plot
+scatterplot <- ggplot(data, aes(x=efficacy, y=choice_index)) + 
+  geom_point(size=1.5, shape=19) +
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE, color="black")+
+  labs(title="Deck choice frequency by perceived efficacy",
+       x="Efficacy (perceived efficacy of objective deck)", y = "Choice Index (rate of choosing empathy deck)")
+ggsave("scatterplot.png", plot = scatterplot, width = 6, height = 4, dpi = 300)
+
+
+choice_efficacy_r_value <- round(choice_efficacy$r, 2)
+choice_efficacy_df <- choice_efficacy$n - 2
+choice_efficacy_p_value <- round(choice_efficacy$p, 8)
+choice_efficacy_ci_lower <- round(choice_efficacy$ci$lower, 2)
+choice_efficacy_ci_upper <- round(choice_efficacy$ci$upper, 2)
+
+```
+
+Additionally, the original study also conducted a meta-analysis and found negative correlations between the selection of the empathy deck and ratings of effort and aversiveness associated with that deck. Again, the differences were all statistically significant (*p* < .001). In the present study, we conducted a Pearson’s r correlation analysis to investigate if similar associations exist in our dataset. We found no significant correlation between deck choice (empathy selection) and perceived effort for each deck (*r* = `r choice_effort_r_value`, `r format_p(choice_effort_p_value)`) or perceived aversiveness (*r* = `r choice_aversion_r_value`, `r format_p(choice_aversion_p_value)`). However, a statistically significant negative correlation was found between deck choice and efficacy (*r* = `r choice_efficacy_r_value`, `r format_p(choice_efficacy_p_value)`), indicating that participants who tended to choose the empathy deck more often than other participants also tended to perceive that deck as more efficacious (see Figure 1). 
+
+![Figure 1](scatterplot.png)
+
+*Figure 1: Deck choice frequency by perceived efficacy.*
+
+
+
+```{r time_course, echo=FALSE, include = FALSE}
+# Center means for effortdiff, aversion, efficacy, choice
+# Subtract the mean from each observation to center the variable
+data$effortdiff_centered <- data$effortdiff - effortdiff_mean
+data$efficacy_centered <- data$efficacy - mean(data$efficacy)
+data$aversion_centered <- data$aversion - aversion_mean
+
+# Create a tall subset with time course choices
+tall_data <- data %>%
+  pivot_longer(
+    cols = c("T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010",
+             "T011", "T012", "T013", "T014", "T015", "T016", "T017", "T018", "T019", "T020",
+             "T021", "T022", "T023", "T024", "T025", "T026", "T027", "T028", "T029", "T030",
+             "T031", "T032", "T033", "T034", "T035", "T036", "T037", "T038", "T039", "T040"),    
+    names_to = "Trial", 
+    values_to = "Value" 
+  )
+
+new_values <- setNames(as.character(1:40), paste0("T", sprintf("%03d", 1:40)))
+
+# Recode values in the column
+tall_data$Trial <- as.numeric(recode(tall_data$Trial, !!! new_values))
+
+# Examine interactions between effortdiff, aversion, efficacy, and time course 
+
+# Generalized linear mixed model examining choice (empathy =1) over time
+# Includes random intercept and random slope for time, autoregressive covariance parameter
+# Time centered to start at 0 (0 - 39)
+tall_data$Trial_centered <- tall_data$Trial - 1
+
+# Value set to 0 and 1
+tall_data$Value_centered <- tall_data$Value - 1
+
+
+
+model1 <- glmer(Value_centered ~ Trial_centered + (Trial_centered | CASE), data = tall_data, family = binomial(link = "logit"))
+
+
+# Examining interaction of Time x mean-centered NASA effort ratings (empathy deck - objective deck)
+model2 <- glmer(Value_centered ~ Trial_centered * effortdiff_centered + (Trial_centered | CASE), data = tall_data, family = binomial(link = "logit"))
+
+# Examining interaction of Time x mean-centered NASA efficacy ratings
+model3 <- glmer(Value_centered ~ Trial_centered * efficacy_centered + (Trial_centered | CASE), 
+                data = tall_data, 
+                family = binomial(link = "logit"), 
+                control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e5)))
+
+# Examining interaction of Time x mean-centered NASA aversion ratings
+model4 <- glmer(Value_centered ~ Trial_centered * aversion_centered + (Trial_centered | CASE), data = tall_data, family = binomial(link = "logit"))
+
+# Print summary of models
+summary(model1)
+summary(model2)
+summary(model3)
+summary(model4)
+
+
+```
+### Time Course Interactions
+
+In the original paper, the authors examined whether there was an interactive effect on deck selection between time course (early versus late trials) and aversiveness, efficacy, and effort. XXX INSERT RESULTS XXX
+
+
+```{r time_plots, echo = FALSE, include=FALSE}
+# Visualization of aggregated choices across participants over time
+time_plot <- ggplot(tall_data, aes(x = Trial_centered, fill = as.factor(Value_centered))) +
+  geom_bar(position = "fill") +
+  labs(title = "Choices Over Time",
+       x = "Trial Centered", y = "Proportion", fill = "Deck Choice") +
+  scale_fill_manual(values = c("red", "blue"), labels = c("Objective (Describe)", "Empathy (Feel)")) +
+  theme_minimal()
+ggsave("time_plot.png", plot = time_plot, width = 6, height = 4, dpi = 300)
+show(time_plot)
+
+# Choices over time by participant
+# Obtain the predicted probabilities from the model
+tall_data$Predicted <- predict(model1, type = "response")
+
+# Create a plot of the predicted probabilities
+participant_time <- ggplot(tall_data, aes(x = Trial_centered, y = Predicted, group = CASE, color = as.factor(CASE))) +
+  geom_line() +
+  labs(title = "Changes in Response Over Time by CASE",
+       x = "Trial Centered", y = "Predicted Probability") +
+  theme_minimal() +
+  guides(color = FALSE)
+
+ggsave("participant_time.png", plot = participant_time, width = 6, height = 4, dpi = 300)
+show(participant_time)
+
+#efficacy/time interaction
+# Convert efficacy_centered to a factor with 3 levels
+tall_data$efficacy_levels <- cut(tall_data$efficacy_centered, breaks = 2, labels = c("Empathy", "Objective"))
+
+# Create an interaction plot with 3 levels of efficacy
+interaction_efficacy <- interaction.plot(tall_data$Trial_centered, tall_data$efficacy_levels, tall_data$Predicted,
+                 xlab = "Trial (0 to 39)", ylab = "Choice (high = more empathy)",
+                 trace.label = "Deck with\n more efficacy", legend = TRUE)
+dev.print(png, file = "interaction_plot.png", width = 6, height = 4, units = "in", res = 300)
+
+
+
+
+```
+
 
 ## Extension Hypotheses
 ```{r extension_hypotheses, echo = FALSE, include = FALSE}
@@ -385,37 +551,88 @@ data$MFI_general = data$MFI_01_R + data$MFI_05 + data$MFI_12_R + data$MFI_16
 #### general fatigue alpha
 general_subscale <- data[, c("MFI_01_R", "MFI_05", "MFI_12_R", "MFI_16")]
 ##### Compute Cronbach's alpha
-alpha(general_subscale)
+psych::alpha(general_subscale)
 
 ### mental fatigue (items 7R, 11R, 13, 19)
 data$MFI_mental = data$MFI_07_R + data$MFI_11_R + data$MFI_13 + data$MFI_19
 #### mental fatigue alpha
 mental_subscale <- data[, c("MFI_07_R", "MFI_11_R", "MFI_13", "MFI_19")]
 ##### Compute Cronbach's alpha
-alpha(mental_subscale)
+psych::alpha(mental_subscale)
 
 ### physical fatigue (items 2, 8R, 14, 20R)
 data$MFI_physical = data$MFI_02 + data$MFI_08_R + data$MFI_14 + data$MFI_20_R
 #### general fatigue alpha
 physical_subscale <- data[, c("MFI_02", "MFI_08_R", "MFI_14", "MFI_20_R")]
 ##### Compute Cronbach's alpha
-alpha(physical_subscale)
+psych::alpha(physical_subscale)
 
 ### reduced motivation (items 4R, 9, 15R, 18)
 data$MFI_motivation = data$MFI_04_R + data$MFI_09 + data$MFI_15_R + data$MFI_18
 #### general fatigue alpha
 motivation_subscale <- data[, c("MFI_04_R", "MFI_09", "MFI_15_R", "MFI_18")]
 ##### Compute Cronbach's alpha
-alpha(motivation_subscale)
+psych::alpha(motivation_subscale)
 
 ### reduced activity (items 3R, 6R, 10, 17)
 data$MFI_activity = data$MFI_03_R + data$MFI_06_R + data$MFI_10 + data$MFI_17
 #### general fatigue alpha
 activity_subscale <- data[, c("MFI_03_R", "MFI_06_R", "MFI_10", "MFI_17")]
 ##### Compute Cronbach's alpha
-alpha(activity_subscale)
+psych::alpha(activity_subscale)
+
+# Correlate these with choice variables
+# Define the list of variables
+variables <- c("choice_index", "effortdiff", "aversion", "efficacy", "MFI_general", "MFI_mental", "MFI_physical", "MFI_motivation", "MFI_activity")
+
+# Subset the dataframe to include only the desired variables
+data_subset <- data[, variables]
+
+# Calculate the correlation matrix
+correlation_matrix <- cor(data_subset, use = "pairwise.complete.obs")
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+
+# Compute correlation matrix with p-values
+cor_results <- corr.test(data_subset)
+
+# Extract the correlation matrix
+cor_matrix <- cor_results$r
+
+# Extract the p-value matrix
+p_matrix <- cor_results$p
+
+# Find significant correlations (e.g., at the 0.05 level)
+sig_indices <- which(p_matrix < 0.05, arr.ind = TRUE)
+
+# Data frame to store the results
+results <- data.frame(
+  variable1 = character(),
+  variable2 = character(),
+  correlation = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+# Extract significant correlations and corresponding p-values
+for (i in 1:nrow(sig_indices)) {
+  if (sig_indices[i, "row"] < sig_indices[i, "col"]) {  # To avoid duplicates
+    results <- rbind(results, c(
+      colnames(cor_matrix)[sig_indices[i, "row"]],
+      colnames(cor_matrix)[sig_indices[i, "col"]],
+      cor_matrix[sig_indices[i, "row"], sig_indices[i, "col"]],
+      p_matrix[sig_indices[i, "row"], sig_indices[i, "col"]]
+    ))
+  }
+}
+print(results)
 
 ```
+
+None of the fatigue subscales were significantly correlated with any of the indices. XXX INSERT RESULTS XXX
+
 
 # Discussion
 Although we were unable to replicate the original study’s findings, additional associations were found when examining participant preference when choosing between decks. In the present study, participants were not inclined to select one deck over the other, but characteristics such as perceived effort, efficacy, and aversiveness to the task may play a significant role in their decision making. 
@@ -432,7 +649,9 @@ Many factors play a role in participants selection of a deck throughout these tr
 
 # References
 Cameron, C. D., Hutcherson, C. A., Ferguson, A. M., Scheffer, J. A., Hadjiandreou, E., & Inzlicht, M. (2019). Empathy is hard work: People choose to avoid empathy because of its cognitive costs. Journal of Experimental Psychology: General, 148(6), 962–976. https://doi.org/10.1037/xge0000595
+
 Nosek, B. A., & Errington, T. M. (2020). What is replication? PLoS Biology, 18(3), e3000691. 
+
 Wagge, J. R., Brandt, M. J., Lazarevic, L. B., Legate, N., Christopherson, C., Wiggins, B., & Grahe, J. E. (2019). Publishing research with undergraduate students via replication work: The Collaborative Replications and Education Project. Frontiers Psychology, 10(247). https://doi.org/10.3389/fpsyg.2019.00247
 
 
