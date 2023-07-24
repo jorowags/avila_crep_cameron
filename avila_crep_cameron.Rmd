@@ -3,13 +3,13 @@ title: "Avila CREP Replication of Cameron et al. (2019)"
 author: "Sydney Gardner & Jordan Wagge"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  word_document:
     toc: yes
     toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
-  word_document:
+  pdf_document:
     toc: yes
     toc_depth: '3'
 ---
@@ -123,7 +123,7 @@ In Cameron et al.'s (2019) study on empathy, they found that participants were m
 Following the procedures of Cameron et al.’s study, we hypothesize that the present study will replicate their previous findings. We expect that participants will demonstrate a preference for the empathy deck when completing the trials of the Empathy Selection Task. 
 
 ### Extension Hypotheses
-SYDNEY PLEASE HALP
+As an extension hypothesis, our class decided to test whether self-reported fatigue and deck choice were associated. Specifically, we believed that participants who chose empathy more would express higher levels of mental -- but not physical -- fatigue after the study was complete.
 
 # Method
 ```{r descriptives, echo = FALSE, include = FALSE}
@@ -201,7 +201,7 @@ When a participant selects from the “DESCRIBE” deck, the participant was tol
 
 After completing the series of trials, participants were tasked to complete a series of questions with open-ended responses, assessing their experience with the Empathy Selection Task. The questions asked participants to share how they chose between decks, or if they had any preferences, in addition to if they noticed any differences between the decks. Participants were then asked to answer questions regarding both the “DESCRIBE” and “FEEL” deck. In regard to both decks, participants answered questions using a 5-point Likert scale, ranging from “Very Low” to “Very High”. Some questions included “How mentally demanding was this deck?”, and “How successful were you in accomplishing what you were asked to do in this deck?”. Following this, participants were asked to respond to demographic questions about their gender identity, racial/ethnic identity, and age. Additionally, participants were asked to complete a few multiple-choice questions about their political orientation (ranging from extremely liberal to extremely conservative, as well as how religious they are (ranging from not at all religious to extremely religious). 
 
-Next, participants looked at an image of a stack of coins and were told to think of it as representing where people stand in the United States. They were then asked, “Where would you place yourself on this stack of coins?” by moving the “X” on the screen to where they think they stand. Finally, to gauge how participants have been feeling lately, they answered a series of questions using a 7-point Likert scale, ranging from “yes, that is true” to “no, that is not true”. All materials mentioned above will be included in the online survey. Participants will have completed participation in this study once they finished the entire survey.  
+Next, participants looked at an image of a stack of coins and were told to think of it as representing where people stand in the United States. They were then asked, “Where would you place yourself on this stack of coins?” by moving the “X” on the screen to where they think they stand. Finally, to gauge participant fatigue, they completed the Multidimensional Fatigue Inventory (Smets et al., 1995), a 20-item survey that assesses self-reported fatigue for five different categories: mental, physical, general, reduced motivation, and reduced activity. Participants answered a series of questions using a 7-point Likert-type scale, ranging from “yes, that is true” to “no, that is not true”. 
 
 Results collected on SoSci were downloaded, evaluated, then analyzed once the desired number of participants had completed the study. Participant responses were reviewed to ensure that participants responded appropriately to the chosen deck. Responses were coded by graduate student researchers involved in this replication study, under the supervision of their faculty mentor. All responses were reviewed and flagged if a participant didn’t respond appropriately to their selected deck (e.g., failing to describe how the child looked for the “DESCRIBE” deck; failing to describe how the child felt for the “FEEL” deck). After reviewing all the data, 4.32% of participant responses for the “DESCRIBE” or “FEEL” trials were flagged by the coders, but remained included in the data analyzed.
 
@@ -616,22 +616,35 @@ results <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Extract significant correlations and corresponding p-values
-for (i in 1:nrow(sig_indices)) {
-  if (sig_indices[i, "row"] < sig_indices[i, "col"]) {  # To avoid duplicates
-    results <- rbind(results, c(
-      colnames(cor_matrix)[sig_indices[i, "row"]],
-      colnames(cor_matrix)[sig_indices[i, "col"]],
-      cor_matrix[sig_indices[i, "row"], sig_indices[i, "col"]],
-      p_matrix[sig_indices[i, "row"], sig_indices[i, "col"]]
-    ))
-  }
-}
+# pull out the mental fatigue r and p
+mf_choice_r <- formatC(round(cor_matrix[6, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+mf_choice_r <- sub("^0", "", mf_choice_r)
+mf_choice_p <- formatC(round(p_matrix[6, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+mf_choice_p <- sub("^0", "", mf_choice_p)
+
+# pull out the physical fatigue r and p -- this is a NEGATIVE CORRELATION for our data -- if this changes, re-write the sub/paste lines!!
+pf_choice_r <- formatC(round(cor_matrix[7, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+pf_choice_r <- sub("^-0", "", pf_choice_r)
+pf_choice_r <- paste0("-", pf_choice_r)
+pf_choice_p <- formatC(round(p_matrix[7, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+pf_choice_p <- sub("^0", "", pf_choice_p)
+
+
+# pull out the significant motivation - choice correlation
+mot_choice_r <- formatC(round(cor_matrix[8, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+mot_choice_r <- sub("^0", "", mot_choice_r)
+mot_choice_p <- formatC(round(cor_matrix[8, 1], 2), format = "f", digits = 2, decimal.mark = ".")
+mot_choice_p <- sub("^0", "", mot_choice_p)
+
+mot_choice_test <- cor.test(data$MFI_motivation, data$choice_index)
+mot_choice_t <- round(mot_choice_test$statistic, 2)
+mot_choice_df <- mot_choice_test$parameter
+
 print(results)
 
 ```
 
-None of the fatigue subscales were significantly correlated with any of the indices. XXX INSERT RESULTS XXX
+None of the fatigue subscales were significantly correlated with any of the indices. We specifically hypothesized that the number of times participants selected the empathy deck would be positively correlated with their mental, but not physical fatigue ratings. However, neither fatigue subscale was correlated with empathy deck selection (in order, *r* values: `r mf_choice_r`, `r pf_choice_r` and *p* values: `r mf_choice_p`, `r pf_choice_p`). In exploratory analysis, we found that there were no other significant correlations between the MFI subscales and deck choice with the exception of the subscale for reduced motivation; specifically, reduced motivation was significantly positively correlated with empathy deck selection, *r*(`r mot_choice_df`) = `r mot_choice_r`, *t*(`r mot_choice_df`) = `r mot_choice_t`, *p* = `r mot_choice_p`.
 
 
 # Discussion
@@ -640,6 +653,8 @@ Although we were unable to replicate the original study’s findings, additional
 Previously found in Cameron et al.’s (2019) study, participants favored the neutral deck over the empathy choice. However, based on the results of the present study, when completing the Empathy Selection Task, participants did not demonstrate a preference for either deck (“DESCRIBE” or “FEEL”) over the other. This difference could be a sign of individuals not being aversive to the cognitive costs of empathy, but it also may be a result of individual differences. One thing that may combat this theory is that consistently across both the original study and the present study, participants found the empathy deck to be more effortful, less efficacious, and more aversive.
 
 Although the original study found that the more participants selected the empathy deck, the less effortful and aversive they perceived it to be, the present study did not find this same association. Our findings did not demonstrate a strong relationship between selection of the empathy deck and ratings of effort or aversiveness. However, our findings did demonstrate a strong relationship between selection of the empathy deck and greater perceived efficacy, meaning if participants thought that the empathy deck yielded better outcomes, they were more inclined to choose the empathy deck over the neutral deck. 
+
+While our extension hypotheses were not supported, exploratory analyses with the MFI found a positive correlation between reduced motivation and empathy deck selection. In other words, participants' indications of reduced motivation were linked to more empathy deck selection. This might suggest one of two or more different causal pathways, as it could be the case that frequent empathy deck selection reduces motivation *or* reduced motivation causes empathy deck selection. While the first explanation seems more likely, more research would be needed involved both pre- and post- measures in order to parse this relationship for a causal pathway. 
 
 ## Limitations
 Since this study was completed online, there is a lack of control over the participant’s environment or the setting in which they completed this survey. We have no way to ascertain if individual’s avoided distractions that may have affected their attention throughout the series of trials they were tasked with completing. Additionally, since participants were recruited through an undergraduate research pool, or made aware of this study through advertisements locally or via social media, the employment of convenience sampling may hinder the sample from being representative of the general population. We also did not control for participant characteristics such as demographics, including socioeconomic status, educational background, etc. that may affect their deck preferences or ratings throughout this study. Lastly, self-reported measures were collected for the ratings of effort, efficacy, or aversiveness that they perceive when selecting the empathy deck. These types of responses may create a bias within participant responses as they might have responded to appease what they perceive the researchers are looking for, or perhaps responding as they think they should, rather than responding with their true feelings. This may affect the reliability or validity of the construct, as participant responses may not be representative of their ratings. 
@@ -651,6 +666,8 @@ Many factors play a role in participants selection of a deck throughout these tr
 Cameron, C. D., Hutcherson, C. A., Ferguson, A. M., Scheffer, J. A., Hadjiandreou, E., & Inzlicht, M. (2019). Empathy is hard work: People choose to avoid empathy because of its cognitive costs. Journal of Experimental Psychology: General, 148(6), 962–976. https://doi.org/10.1037/xge0000595
 
 Nosek, B. A., & Errington, T. M. (2020). What is replication? PLoS Biology, 18(3), e3000691. 
+
+Smets, E. M., Garssen, B., Bonke, B., & De Haes, J. C. (1995). The Multidimensional Fatigue Inventory (MFI) psychometric qualities of an instrument to assess fatigue. Journal of Psychosomatic Research, 39(3), 315–325. https://doi.org/10.1016/0022-3999(94)00125-o
 
 Wagge, J. R., Brandt, M. J., Lazarevic, L. B., Legate, N., Christopherson, C., Wiggins, B., & Grahe, J. E. (2019). Publishing research with undergraduate students via replication work: The Collaborative Replications and Education Project. Frontiers Psychology, 10(247). https://doi.org/10.3389/fpsyg.2019.00247
 
