@@ -420,9 +420,9 @@ choice_efficacy_ci_upper <- round(choice_efficacy$ci$upper, 2)
 
 Additionally, the original study also conducted a meta-analysis and found negative correlations between the selection of the empathy deck and ratings of effort and aversiveness associated with that deck. Again, the differences were all statistically significant (*p* < .001). In the present study, we conducted a Pearson’s r correlation analysis to investigate if similar associations exist in our dataset. We found no significant correlation between deck choice (empathy selection) and perceived effort for each deck (*r* = `r choice_effort_r_value`, `r format_p(choice_effort_p_value)`) or perceived aversiveness (*r* = `r choice_aversion_r_value`, `r format_p(choice_aversion_p_value)`). However, a statistically significant negative correlation was found between deck choice and efficacy (*r* = `r choice_efficacy_r_value`, `r format_p(choice_efficacy_p_value)`), indicating that participants who tended to choose the empathy deck more often than other participants also tended to perceive that deck as more efficacious (see Figure 1). 
 
-![Figure 1](scatterplot.png)
+![*Figure 1: Deck choice frequency by perceived efficacy.*](scatterplot.png)
 
-*Figure 1: Deck choice frequency by perceived efficacy.*
+
 
 
 
@@ -478,15 +478,30 @@ model4 <- glmer(Value_centered ~ Trial_centered * aversion_centered + (Trial_cen
 
 # Print summary of models
 summary(model1)
+beta_Trial_centered <- fixef(model1)["Trial_centered"]
+pr_value_Trial_centered <- round(summary(model1)$coefficients["Trial_centered", "Pr(>|z|)"], 2)
+
 summary(model2)
+beta_interaction_effortdiff <- fixef(model2)["Trial_centered:effortdiff_centered"]
+pr_value_interaction_effortdiff <- round(summary(model2)$coefficients["Trial_centered:effortdiff_centered", "Pr(>|z|)"], 2)
+
 summary(model3)
+beta_interaction_efficacy <- fixef(model3)["Trial_centered:efficacy_centered"]
+pr_value_interaction_efficacy <- round(summary(model3)$coefficients["Trial_centered:efficacy_centered", "Pr(>|z|)"], 2)
+pr_value_interaction_efficacy <- ifelse(pr_value_interaction_efficacy == 0, "< .001", pr_value_interaction_efficacy)
+
+
 summary(model4)
+beta_interaction_aversion <- fixef(model4)["Trial_centered:aversion_centered"]
+pr_value_interaction_aversion <- round(summary(model4)$coefficients["Trial_centered:aversion_centered", "Pr(>|z|)"], 2)
 
 
 ```
 ### Time Course Interactions
 
-In the original paper, the authors examined whether there was an interactive effect on deck selection between time course (early versus late trials) and aversiveness, efficacy, and effort. XXX INSERT RESULTS XXX
+In the original paper, the authors examined whether there was an interactive effect on deck selection between time course (early versus late trials) and aversiveness, efficacy, and effort. We found no significant main effects of time ($\beta$ = `r round(beta_Trial_centered, 2)`, *p* = `r pr_value_Trial_centered`) or interactions between time and effort ($\beta$ = `r round(beta_interaction_effortdiff, 2)`, *p* = `r pr_value_interaction_effortdiff`) or time and aversiveness ($\beta$ = `r round(beta_interaction_aversion, 2)`, *p* = `r pr_value_interaction_aversion`). However, we did find a significant interaction between time and efficacy, such that empathy deck selection appeared to decrease over time for participants who found the empathy deck less efficacious, and increase over time for participants who found the empathy deck more efficacious ($\beta$ = `r round(beta_interaction_efficacy, 2)`, *p* = `r pr_value_interaction_efficacy`). This pattern is demonstrated in Figure 2:
+
+![*Figure 2: Interaction between time (trial number) and efficacy.*](interaction_plot.png)
 
 
 ```{r time_plots, echo = FALSE, include=FALSE}
