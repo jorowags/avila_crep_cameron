@@ -3,13 +3,13 @@ title: "Avila CREP Replication of Cameron et al. (2019)"
 author: "Sydney Gardner & Jordan Wagge"
 date: '`r Sys.Date()`'
 output:
-  word_document:
+  pdf_document:
     toc: yes
     toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
-  pdf_document:
+  word_document:
     toc: yes
     toc_depth: '3'
 ---
