@@ -64,6 +64,17 @@ data <- subset(data, data$LASTPAGE > 85)
 # remove minors
 data <- subset(data, data$age > 17)
 
+# remove participants who didn't complete the tasks
+# Create a logical matrix where each cell is TRUE if the corresponding value is -1
+incomplete_tasks = data[, paste0("C", sprintf("%03d", 1:40))] < 0
+
+# Sum these logical values row-wise. Any row with a sum greater than 0 has at least one -1 value
+rows_to_exclude = rowSums(incomplete_tasks) > 0
+
+# Exclude these rows from the dataset
+data <- data[!rows_to_exclude, ]
+
+
 # remove cases with "test" in gender
 data <- subset(data, !grepl("Test", age, ignore.case = TRUE))
 
@@ -418,6 +429,8 @@ choice_efficacy_ci_upper <- round(choice_efficacy$ci$upper, 2)
 
 ```
 
+### rewrite below -- we now *do* find a significant correlation between deck choice and perceived effort
+
 Additionally, the original study also conducted a meta-analysis and found negative correlations between the selection of the empathy deck and ratings of effort and aversiveness associated with that deck. Again, the differences were all statistically significant (*p* < .001). In the present study, we conducted a Pearson’s r correlation analysis to investigate if similar associations exist in our dataset. We found no significant correlation between deck choice (empathy selection) and perceived effort for each deck (*r* = `r choice_effort_r_value`, `r format_p(choice_effort_p_value)`) or perceived aversiveness (*r* = `r choice_aversion_r_value`, `r format_p(choice_aversion_p_value)`). However, a statistically significant negative correlation was found between deck choice and efficacy (*r* = `r choice_efficacy_r_value`, `r format_p(choice_efficacy_p_value)`), indicating that participants who tended to choose the empathy deck more often than other participants also tended to perceive that deck as more efficacious (see Figure 1). 
 
 ![*Figure 1: Deck choice frequency by perceived efficacy.*](scatterplot.png)
@@ -498,6 +511,8 @@ pr_value_interaction_aversion <- round(summary(model4)$coefficients["Trial_cente
 
 ```
 ### Time Course Interactions
+
+### we now do have a significant main effect of time
 
 In the original paper, the authors examined whether there was an interactive effect on deck selection between time course (early versus late trials) and aversiveness, efficacy, and effort. We found no significant main effects of time ($\beta$ = `r round(beta_Trial_centered, 2)`, *p* = `r pr_value_Trial_centered`) or interactions between time and effort ($\beta$ = `r round(beta_interaction_effortdiff, 2)`, *p* = `r pr_value_interaction_effortdiff`) or time and aversiveness ($\beta$ = `r round(beta_interaction_aversion, 2)`, *p* = `r pr_value_interaction_aversion`). However, we did find a significant interaction between time and efficacy, such that empathy deck selection appeared to decrease over time for participants who found the empathy deck less efficacious, and increase over time for participants who found the empathy deck more efficacious ($\beta$ = `r round(beta_interaction_efficacy, 2)`, *p* = `r pr_value_interaction_efficacy`). This pattern is demonstrated in Figure 2:
 
@@ -660,6 +675,8 @@ print(results)
 ```
 
 None of the fatigue subscales were significantly correlated with any of the indices. We specifically hypothesized that the number of times participants selected the empathy deck would be positively correlated with their mental, but not physical fatigue ratings. However, neither fatigue subscale was correlated with empathy deck selection (in order, *r* values: `r mf_choice_r`, `r pf_choice_r` and *p* values: `r mf_choice_p`, `r pf_choice_p`). In exploratory analysis, we found that there were no other significant correlations between the MFI subscales and deck choice with the exception of the subscale for reduced motivation; specifically, reduced motivation was significantly positively correlated with empathy deck selection, *r*(`r mot_choice_df`) = `r mot_choice_r`, *t*(`r mot_choice_df`) = `r mot_choice_t`, *p* = `r mot_choice_p`.
+
+### this last test is no longer significant
 
 
 # Discussion
