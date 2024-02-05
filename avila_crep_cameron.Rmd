@@ -3,13 +3,13 @@ title: "Avila CREP Replication of Cameron et al. (2019)"
 author: "Sydney Gardner & Jordan Wagge"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
+  word_document:
     toc: yes
     toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
-  word_document:
+  pdf_document:
     toc: yes
     toc_depth: '3'
 ---
@@ -29,7 +29,7 @@ format_p <- function(p_value) {
 ```
 
 ```{r packages, include=FALSE, echo = FALSE}
-packages = c("psych","dplyr","tidyverse", "lme4")
+packages = c("psych","dplyr","tidyverse", "lme4", "trackdown")
 
 ## Now load or install&load all
 package.check <- lapply(
@@ -42,7 +42,7 @@ package.check <- lapply(
   }
 )
 
-
+## We are using trackdown for this paper - Instructions on trackdown here: https://cran.r-project.org/web/packages/trackdown/vignettes/trackdown-workflow.html 
 ```
 
 ```{r import_data, echo = FALSE}
@@ -702,6 +702,4 @@ Nosek, B. A., & Errington, T. M. (2020). What is replication? PLoS Biology, 18(3
 Smets, E. M., Garssen, B., Bonke, B., & De Haes, J. C. (1995). The Multidimensional Fatigue Inventory (MFI) psychometric qualities of an instrument to assess fatigue. Journal of Psychosomatic Research, 39(3), 315–325. https://doi.org/10.1016/0022-3999(94)00125-o
 
 Wagge, J. R., Brandt, M. J., Lazarevic, L. B., Legate, N., Christopherson, C., Wiggins, B., & Grahe, J. E. (2019). Publishing research with undergraduate students via replication work: The Collaborative Replications and Education Project. Frontiers Psychology, 10(247). https://doi.org/10.3389/fpsyg.2019.00247
-
-
 
