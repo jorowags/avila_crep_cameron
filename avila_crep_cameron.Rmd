@@ -3,13 +3,13 @@ title: "Avila CREP Replication of Cameron et al. (2019)"
 author: "Sydney Gardner & Jordan Wagge"
 date: '`r Sys.Date()`'
 output:
-  word_document:
-    toc: yes
-    toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
   pdf_document:
+    toc: yes
+    toc_depth: '3'
+  word_document:
     toc: yes
     toc_depth: '3'
 ---
@@ -150,6 +150,8 @@ n_exclusions <- as.numeric(n_initial) - as.numeric(n_final)
 # Age M and SD
 ## Clean up age variable
 data$age <- gsub("\\D", "", data$age)
+## one participant wrote "19 2004" and that means they are 19
+data$age[data$CASE == 527] <- 19
 age_m <- sprintf("%.2f", mean(as.numeric(data$age)), 2)
 age_sd <- sprintf("%.2f", sd(as.numeric(data$age)), 2)
 
@@ -163,6 +165,12 @@ data$gender <- gsub("Male","male", data$gender)
 data$gender <- gsub("Straight male","male", data$gender)
 data$gender <- gsub("male ","male", data$gender)
 data$gender <- gsub("Female","female", data$gender)
+data$gender <- gsub("girl","female", data$gender)
+data$gender <- gsub("I identify as a cisgendered woman.","female", data$gender)
+data$gender <- gsub("she/her","female", data$gender)
+data$gender <- gsub("Woman","female", data$gender)
+data$gender <- gsub("woman","female", data$gender)
+
 
 ## Get gender percentages
 female_percentage <- sprintf("%.2f", prop.table(table(data$gender))["female"] * 100, 2)
@@ -188,6 +196,17 @@ data$race <- gsub("hispanic", "Hispanic", data$race)
 data$race <- gsub("Indian ", "Indian", data$race)
 data$race <- gsub("Native Indian", "Indigenous", data$race)
 data$race <- gsub("None ", "None Reported", data$race)
+data$race <- gsub("White/White", "White", data$race)
+data$race <- gsub("African-American", "Black", data$race)
+data$race <- gsub("black", "Black", data$race)
+data$race <- gsub("Hispanic ", "Hispanic", data$race)
+data$race <- gsub("histpanic ", "Hispanic", data$race)
+data$race <- gsub("latino ", "Hispanic", data$race)
+data$race <- gsub("White ", "White", data$race)
+data$race <- gsub("White/ mexican", "Multiracial", data$race)
+data$race <- gsub("Whiteis right", "White", data$race)
+data$race <- gsub("Native American/Hispanic", "Multiracial", data$race)
+
 
 ## Get race percentages
 white_percentage <- sprintf("%.2f", prop.table(table(data$race))["White"] * 100, 2)
